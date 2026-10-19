@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
@@ -37,13 +36,12 @@
         }
     </script>
 
-    <!-- Firebase SDKs for Real Google Authentication -->
+    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global Firebase configuration provided by environment or default
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'ff-recharge-app';
         const firebaseConfig = {
             apiKey: "AIzaSyCCFkcWpYuiAF5MN5q5dxQI_tHDJFCJtW8",
@@ -66,7 +64,6 @@
         window.signInWithPopup = signInWithPopup;
         window.signOut = signOut;
 
-        // Auto auth check on start
         window.addEventListener('DOMContentLoaded', () => {
             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                 signInWithCustomToken(auth, __initial_auth_token).catch(() => {});
@@ -178,10 +175,6 @@
             box-shadow: 0 0 15px rgba(255, 85, 0, 0.4);
         }
 
-        .glow-gold {
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        }
-
         .bg-card-gradient {
             background: linear-gradient(145deg, #182232 0%, #101622 100%);
         }
@@ -244,7 +237,7 @@
                 <!-- Google Auth UI Block -->
                 <div id="googleAuthContainer" class="space-y-3">
                     <div id="loggedOutState" class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-center space-y-2">
-                        <p class="text-xs text-slate-400">Inicia sesión con tu cuenta de Google o regístrate con tu nombre y teléfono para proteger tus compras.</p>
+                        <p class="text-xs text-slate-400">Inicia sesión con tu cuenta de Google o regístrate con tu número para gestionar tus compras.</p>
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                             <button onclick="realGoogleLogin()" class="w-full py-2.5 px-3 bg-white hover:bg-gray-100 text-slate-800 font-semibold rounded-xl text-xs flex items-center justify-center gap-2 transition shadow cursor-pointer">
@@ -325,7 +318,7 @@
                     <div id="bonusAlert" class="hidden mt-3 p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs flex items-center justify-between animate-pulse">
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-gift text-xl text-brand-gold"></i>
-                            <span><strong>¡GANASTE EL PREMIO!</strong> Se notificará en tu próximo mensaje de WhatsApp para que reclames tus 110 Diamantes GRATIS.</span>
+                            <span><strong>¡PREMIO DESBLOQUEADO!</strong> Tu notificación de premio de 110 Diamantes se enviará con tu pedido.</span>
                         </div>
                     </div>
                 </div>
@@ -391,16 +384,19 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs text-slate-400 mb-1">Adjuntar Comprobante</label>
-                        <label for="paymentProofInput" class="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl border border-dashed border-slate-700 bg-slate-900/60 hover:bg-slate-900 cursor-pointer transition text-slate-400 hover:text-slate-200">
-                            <i class="fa-solid fa-cloud-arrow-up text-brand-orange text-base"></i>
-                            <span id="uploadStatusText" class="text-xs truncate">Seleccionar o tomar captura</span>
+                        <label class="block text-xs text-slate-400 mb-1">Adjuntar Capture de Comprobante</label>
+                        <label for="paymentProofInput" class="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-slate-700 bg-slate-900/60 hover:bg-slate-900 cursor-pointer transition text-slate-400 hover:text-slate-200">
+                            <i class="fa-solid fa-cloud-arrow-up text-brand-orange text-lg"></i>
+                            <span id="uploadStatusText" class="text-xs truncate font-medium">Seleccionar o tomar captura</span>
                             <input type="file" id="paymentProofInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
                         </label>
                     </div>
 
-                    <div id="imagePreviewContainer" class="hidden relative mt-2 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 max-h-36 flex justify-center items-center">
-                        <img id="imagePreview" src="" alt="Comprobante" class="object-contain max-h-36 w-full">
+                    <div id="imagePreviewContainer" class="hidden relative mt-2 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 max-h-40 flex flex-col justify-center items-center p-1">
+                        <img id="imagePreview" src="" alt="Comprobante" class="object-contain max-h-36 w-full rounded-lg">
+                        <p class="text-[10px] text-emerald-400 mt-1 font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-check"></i> Imagen lista para enviar
+                        </p>
                         <button onclick="removeImage()" class="absolute top-2 right-2 w-7 h-7 bg-red-600/90 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-700 shadow">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
@@ -450,8 +446,8 @@
             </div>
             <div class="space-y-2 text-slate-300 leading-relaxed">
                 <p>💎 <strong>Atención Garantizada:</strong> Recargas procesadas de forma directa a tu ID de Free Fire.</p>
-                <p>🎁 <strong>Bono Gratis:</strong> Al llegar a 20 recargas obtienes automáticamente la notificación del premio de <strong>110 Diamantes GRATIS</strong> enviada directo al WhatsApp del dueño.</p>
-                <p>⚡ <strong>Entrega Rápida:</strong> Se procesa al validar la referencia de Pago Móvil.</p>
+                <p>📸 <strong>Envío de Comprobante:</strong> Al enviar el pedido, la captura del comprobante se copia automáticamente en tu portapapeles para que la pegues directo en WhatsApp.</p>
+                <p>🎁 <strong>Bono Gratis:</strong> Al llegar a 20 recargas obtienes automáticamente la notificación del premio de <strong>110 Diamantes GRATIS</strong>.</p>
             </div>
             <button onclick="closeHelpModal()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold">
                 Entendido
@@ -481,7 +477,7 @@
             usedReferences: [],
             isLoggedIn: false
         };
-        let uploadedImageName = '';
+        let uploadedFile = null;
 
         window.onload = function() {
             renderPackages();
@@ -499,7 +495,7 @@
             } catch (error) {
                 console.error("Google login error:", error);
                 try {
-                    const anonUser = await window.signInAnonymously(window.firebaseAuth);
+                    await window.signInAnonymously(window.firebaseAuth);
                     userData.isLoggedIn = true;
                     userData.name = document.getElementById('clientPhone').value ? `Cliente ${document.getElementById('clientPhone').value.slice(-4)}` : 'Cliente Verificado';
                     userData.email = 'Registrado vía móvil';
@@ -688,7 +684,7 @@
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (file) {
-                uploadedImageName = file.name;
+                uploadedFile = file;
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('imagePreview').src = e.target.result;
@@ -706,7 +702,7 @@
             document.getElementById('imagePreviewContainer').classList.add('hidden');
             document.getElementById('uploadStatusText').innerText = 'Seleccionar o tomar captura';
             document.getElementById('uploadStatusText').classList.remove('text-emerald-400');
-            uploadedImageName = '';
+            uploadedFile = null;
         }
 
         function copyToClipboard(text, label) {
@@ -723,6 +719,19 @@
             document.body.removeChild(textarea);
         }
 
+        async function copyImageToClipboard(file) {
+            try {
+                if (navigator.clipboard && window.ClipboardItem) {
+                    const item = new ClipboardItem({ [file.type]: file });
+                    await navigator.clipboard.write([item]);
+                    return true;
+                }
+            } catch (e) {
+                console.log('Clipboard API image copy not supported', e);
+            }
+            return false;
+        }
+
         function showToast(msg) {
             const toast = document.getElementById('toastMessage');
             document.getElementById('toastText').innerText = msg;
@@ -735,7 +744,7 @@
             }, 3000);
         }
 
-        function sendOrderToWhatsApp() {
+        async function sendOrderToWhatsApp() {
             const phone = document.getElementById('clientPhone').value.trim();
             const ffid = document.getElementById('playerFFID').value.trim();
             const ref = document.getElementById('paymentRef').value.trim();
@@ -760,9 +769,17 @@
                 return;
             }
 
+            if (!uploadedFile) {
+                showToast('Por favor adjunta la captura del pago');
+                return;
+            }
+
             if (!userData.isLoggedIn) {
                 quickClientRegister();
             }
+
+            // Intentar copiar automáticamente la captura al portapapeles
+            let imageCopied = await copyImageToClipboard(uploadedFile);
 
             if (!userData.usedReferences) {
                 userData.usedReferences = [];
@@ -780,27 +797,33 @@
 
             let bonusNotificationText = "";
             if (userData.rechargesCount >= 20) {
-                bonusNotificationText = `\n\n🎉 *¡ALERTA DE PREMIO GANADO!* 🎉\n⭐ Este cliente ha alcanzado las *${userData.rechargesCount} recargas acumuladas* con su cuenta de Google verificada.\n🎁 ¡SE REQUIERE APLICAR BONO GRATIS DE 110 DIAMANTES!`;
+                bonusNotificationText = `\n\n🎉 *¡ALERTA DE PREMIO GANADO!* 🎉\n⭐ Este cliente ha alcanzado las *${userData.rechargesCount} recargas acumuladas*.\n🎁 ¡SE REQUIERE APLICAR BONO GRATIS DE 110 DIAMANTES!`;
             }
 
             const storeWhatsAppNumber = "584262568640";
 
             let text = `🔥 *NUEVO PEDIDO DE RECARGA FREE FIRE* 🔥\n\n`;
             text += `👤 *Cliente Verificado:* ${userData.name}\n`;
-            text += `📧 *Correo Google:* ${userData.email}\n`;
+            text += `📧 *Correo/Estado:* ${userData.email || 'Registrado'}\n`;
             text += `📱 *WhatsApp:* ${phone}\n`;
             text += `🎯 *ID Free Fire:* ${ffid}\n\n`;
             text += `💎 *Paquete Elegido:* ${formatBs(selectedPackage.diamonds)} Diamantes\n`;
             text += `💵 *Monto Total:* ${formatBs(selectedPackage.priceBs)} Bs\n\n`;
             text += `🏦 *Pago Móvil (Provincial):* Ref. ${ref}\n`;
-            text += `📸 *Comprobante:* ${uploadedImageName ? 'Adjunto preparado' : 'Te lo envío por este chat'}\n`;
+            text += `📸 *Comprobante de Pago:* ${imageCopied ? '¡Copado en Portapapeles! (Listo para Pegar)' : 'Adjunto a continuación'}\n`;
             text += `📊 *Historial Verificado:* Recarga #${userData.rechargesCount}/20${bonusNotificationText}\n\n`;
-            text += `Atento a la confirmación de la recarga. ¡Muchas gracias!`;
+            text += `Te envío la captura del Pago Móvil por este chat. ¡Muchas gracias!`;
 
             const encodedText = encodeURIComponent(text);
             const waUrl = `https://api.whatsapp.com/send?phone=${storeWhatsAppNumber}&text=${encodedText}`;
-            
-            window.location.href = waUrl;
+
+            if (imageCopied) {
+                showToast('¡Comprobante copiado! Pégalo en WhatsApp');
+            }
+
+            setTimeout(() => {
+                window.location.href = waUrl;
+            }, 600);
         }
 
         function openHelpModal() {
@@ -813,3 +836,4 @@
     </script>
 </body>
 </html>
+```
